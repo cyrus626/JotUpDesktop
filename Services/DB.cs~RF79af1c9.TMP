@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using JotUp.Models;
+using LiteDB;
+namespace JotUp.Services
+{
+    class DB
+    {
+        static string DBPath { get; set; } = "JotUp.db";
+        static LiteDatabase JotUpDB {get;} = new LiteDatabase(DBPath);
+        public static void SaveJotings(NewPage newPage)
+        {
+            var collectData = JotUpDB.GetCollection<NewPage>(nameof(DBPath));
+            collectData.Upsert(newPage);
+        }
+        public static void DeleteJotings(int jotterId)
+        {
+            var collectData = JotUpDB.GetCollection<NewPage>(nameof(DBPath));
+            collectData.Delete(jotterId);
+        }
+        public static List<NewPage> AllJotings()
+        {
+            var collectData = JotUpDB.GetCollection<NewPage>(nameof(DBPath));
+            return collectData.FindAll().ToList();
+        }
+    }
+}
